@@ -1,0 +1,187 @@
+ This method will create an External Directory Server Proxy and 
+  // initiatlize this User Manager 
+		private void init() throws UserProfileResourceException 
+	{	 
+		System.out.println("Initializing External UserManager .... "); 
+		 
+		try { 
+			proxy = new SampleExternalProxy(); 
+		} catch (Exception ex) { 
+			System.out.println("Fatal Error " + ex.toString()); 
+			throw new com.sun.content.server.service.security.util.UserProfileResourceException(ex.toString()); 
+		} 
+	} 
+ 
+	protected boolean doIsAuthenticated(String inUserId, String inPassword) 
+			throws UserProfileResourceException { 
+				 	 
+		System.out.println("SampleUserManagerImpl.doIsAuthenticated --- ");  
+ 
+		boolean isauthenticated = false; 
+		 
+		try { 
+    
+			User aUser = proxy.createUserFromExternal(inUserId); 
+			isauthenticated = ( (aUser.getLoginId()==inUserId) && (aUser.getPassword()==inPassword)); 
+			if (isauthenticated) 
+				System.out.println("SampleUserManagerImpl.doIsAuthenticated:- User "+inUserId+" is successfully authenticated."); 
+			else 
+				System.out.println("SampleUserManagerImpl.doIsAuthenticated:- User "+inUserId+" :unable to authenticate (wrong login and password)"); 
+		} catch (Exception ex) { 
+			isauthenticated = false; 
+			System.out.println("SampleUserManagerImpl.doIsAuthenticated:- User "+inUserId+" can not authenticate (user not found)"); 
+			throw new com.sun.content.server.service.security.util.UserProfileResourceException(ex.toString()); 
+		} 
+		return isauthenticated; 
+								 
+	} 
+ 
+	protected boolean doAccountExists(String userId) throws UserProfileResourceException { 
+	 
+		System.out.println("SampleUserManagerImpl.doAccountExists --- ");  
+		    
+		// Use the External Proxy search method to check if the account exist 
+		return proxy.searchUser(userId); 
+	} 
+  	 
+  	 
+  	protected boolean doAddUser(User user) throws UserProfileResourceException{ 
+		 
+		boolean updated = false; 
+		 
+		//This is not an allowed operation.If this is not the case add the code to 
+    // implement it 
+		System.out.println("SampleUserManagerImpl.doAddUser - This operation is not implemented !");  
+		 
+		return updated; 
+ 
+  	}   
+ 
+	protected void doDisableUser(String userId) throws UserProfileResourceException { 
+	 
+		//This is not an allowed operation.If this is not the case add the code to 
+    // implement it 
+		System.out.println("SampleUserManagerImpl.doDisableUser - This operation is not implemented !");  
+		 
+	} 
+ 
+	protected void doEnableUser(String userId) throws UserProfileResourceException { 
+ 
+		//This is not an allowed operation.If this is not the case add the code to 
+    // implement it 
+		System.out.println("SampleUserManagerImpl.doEnableUser - This operation is not implemented !");  
+	 
+	} 
+   
+	protected User doGetAnonymousUser() throws UserProfileResourceException { 
+		return new SampleUserImpl(); 
+	} 
+   
+	protected User doGetUser(String userId) throws UserProfileResourceException { 
+ 
+		User aUser = null; 
+		try { 
+			aUser = proxy.createUserFromExternal(userId); 
+			if (aUser != null) 
+				System.out.println("SampleUserManagerImpl.doGetUserByUniqueDeviceId:- User with "+userId+" is found."); 
+			else 
+				System.out.println("SampleUserManagerImpl.doGetUserByUniqueDeviceId:- User with "+userId+" not found"); 
+		} catch (Exception ex) { 
+			System.out.println("SampleUserManagerImpl.doGetUserByUniqueDeviceId:- User "+userId+" not found)"); 
+			throw new com.sun.content.server.service.security.util.UserProfileResourceException(ex); 
+		} 
+		return aUser; 
+	 
+	} 
+   
+	/* This method can be implemented the same way as doGetUser.Instead of 
+   * using the createUserFromExternal(loginId) you can extend the 
+   * SampleExternalProxy to implement a specific 
+   * createUserFromExternalUsingDeviceId(uniqueDeviceId). 
+	* For now we will assume that the string loginId can be replaced by a search 
+   * key ID and it will return the matching profile. 
+	 */ 
+	protected User doGetUserByUniqueDeviceId(String inUniqueDeviceId) throws UserProfileResourceException { 
+		return doGetUser(inUniqueDeviceId); 
+	} 
+  
+ 	// Sample implementation as doGetUser 
+ 	protected User doGetUserByMobileId(String inMobileId) throws UserProfileResourceException { 
+ 		return doGetUser(inMobileId); 
+	} 
+ 
+	protected Iterator doGetAllUsers(String role) throws UserProfileResourceException { 
+ 
+		System.out.println("SampleUserManagerImpl.doGetAllUsers - This operation is not implemented !");  
+		ArrayList users = new ArrayList(); 
+		return users.iterator(); 
+	} 
+ 
+	protected Iterator doGetAllUsersContainingLastName(String lastName, String role) throws UserProfileResourceException { 
+ 
+		System.out.println("SampleUserManagerImpl.doGetAllUsersContainingLastName - This operation is not implemented !");  
+		ArrayList users = new ArrayList(); 
+		return users.iterator(); 
+	} 
+   
+	protected Iterator doGetAllUsersContainingFirstName(String firstName, String role) throws UserProfileResourceException { 
+ 
+		System.out.println("SampleUserManagerImpl.doGetAllUsersContainingFirstName - This operation is not implemented !");  
+		ArrayList users = new ArrayList(); 
+		return users.iterator(); 
+	} 
+   
+	protected Iterator doGetAllUsersContainingName(String name, String role) 
+				throws UserProfileResourceException { 
+ 
+		System.out.println("SampleUserManagerImpl.doGetAllUsersContainingName - This operation is not implemented !");  
+		ArrayList users = new ArrayList(); 
+		return users.iterator(); 
+	} 
+   
+	protected Iterator doGetAllUsersContainingId(String userId, String role) 
+				throws UserProfileResourceException { 
+				 
+		System.out.println("SampleUserManagerImpl.doGetAllUsersContainingId - This operation is not implemented !");  
+		ArrayList users = new ArrayList(); 
+		return users.iterator(); 
+	} 
+ 
+	protected Iterator doGetAllLikeInOrder(String[] columns, String[] values, 
+		String[] orders, boolean isDescending, int pageNum, int recPerPage, String role) 
+		throws UserProfileResourceException { 
+				 
+		System.out.println("SampleUserManagerImpl.doGetAllLikeInOrder - This operation is not implemented !");  
+		ArrayList users = new ArrayList(); 
+		return users.iterator(); 
+	} 
+ 
+	protected String doGetFieldName(int fieldContant, String role)  
+			throws UserProfileResourceException { 
+ 
+		System.out.println("SampleUserManagerImpl.doGetFieldName - This operation is not implemented !");  
+		return null; 
+	} 
+ 
+	protected boolean doIsActive(String userId) throws UserProfileResourceException { 
+ 
+		System.out.println("SampleUserManagerImpl.doIsActive - This operation is not implemented !");  
+		return false; 
+	} 
+   
+	protected boolean doRemoveUser(String userId) throws UserProfileResourceException { 
+		 
+		System.out.println("SampleUserManagerImpl.doRemoveUser - This operation is not implemented !");  
+		return false; 
+	} 
+ 
+	protected boolean doUpdateUser(User user) throws UserProfileResourceException { 
+ 
+		System.out.println("SampleUserManagerImpl.doUpdateUser - This operation is not implemented !");  
+		return false; 
+	} 
+   
+	protected User doGetUserInstance() throws UserProfileResourceException { 
+		 
+		System.out.println("SampleUserManagerImpl.doGetUserInstance - This operation is not implemented !");  
+		return null; 
